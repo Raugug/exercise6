@@ -1,5 +1,5 @@
 const Queue = require('bull');
-const sendMessage = require("./controllers/sendMessage")
+const sendMessage = require("../controllers/sendMessage"); 
 
 
 const queue = new Queue('message', 'redis://127.0.0.1:6379');
