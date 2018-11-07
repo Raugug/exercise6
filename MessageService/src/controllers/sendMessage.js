@@ -5,8 +5,7 @@ const getCredit = require("../clients/getCredit");
 const random = n => Math.floor(Math.random() * Math.floor(n));
 
 module.exports = function(req, res) {
-  const body = JSON.stringify(req.body);
-
+  const body = JSON.stringify(req);
   var query = getCredit();
 
   query.exec(function(err, credit) {
@@ -17,7 +16,7 @@ module.exports = function(req, res) {
     if (current_credit > 0) {
       const postOptions = {
         // host: "exercise4_messageapp_1",
-        // host: "messageapp",
+        //host: "messageapp",
         host: "localhost",
         port: 3000,
         path: "/message",
@@ -35,7 +34,7 @@ module.exports = function(req, res) {
         if (postRes.statusCode === 200) {
           saveMessage(
             {
-              ...req.body,
+              ...req,
               status: "OK"
             },
             function(_result, error) {
@@ -52,7 +51,7 @@ module.exports = function(req, res) {
 
           saveMessage(
             {
-              ...req.body,
+              ...req,
               status: "ERROR"
             },
             () => {
@@ -71,7 +70,7 @@ module.exports = function(req, res) {
 
         saveMessage(
           {
-            ...req.body,
+            ...req,
             status: "TIMEOUT"
           },
           () => {

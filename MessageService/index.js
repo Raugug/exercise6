@@ -1,5 +1,9 @@
 const http = require("http");
 const express = require("express");
+/* const Queue = require('bull');
+const jobQueue = new Queue('jobQueue'); */
+const handleRequest = require("./src/queue")
+const worker = require("./src/worker")
 
 const bodyParser = require("body-parser");
 const {
@@ -7,11 +11,13 @@ const {
   ValidationError
 } = require("express-json-validator-middleware");
 
-const sendMessage = require("./src/controllers/sendMessage");
+//const sendMessage = require("./src/controllers/sendMessage");
 const getMessages = require("./src/controllers/getMessages");
 const updateCredit = require("./src/controllers/updateCredit");
+const getMessageStatus = require("./src/controllers/getMessageStatus");
 
 const app = express();
+
 
 const validator = new Validator({ allErrors: true });
 const { validate } = validator;
@@ -54,7 +60,8 @@ app.post(
   "/messages",
   bodyParser.json(),
   validate({ body: messageSchema }),
-  sendMessage
+  handleRequest
+  //sendMessage
 );
 
 app.post(
@@ -65,6 +72,7 @@ app.post(
 );
 
 app.get("/messages", getMessages);
+app.get("/message/:messageId/status", getMessageStatus);
 
 app.use(function(err, req, res, next) {
   console.log(res.body);
@@ -75,6 +83,6 @@ app.use(function(err, req, res, next) {
   }
 });
 
-app.listen(9005, function() {
-  console.log("App started on PORT 9005");
+app.listen(9006, function() {
+  console.log("App started on PORT 9006");
 });

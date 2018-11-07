@@ -1,13 +1,14 @@
 version: "3"
 services:
   exercise6:
-    build: .
+    build: ./MessageService/
     ports:
       - "9006:9006"
     links:
       - messageapp
       - mongodb
       - replica
+      - redis
   messageapp:
     image: cabify/backend-bootcamp-messageapp
     ports:
@@ -25,3 +26,11 @@ services:
       - ./data/replica:/data/replica
     ports:
       - 27018:27018
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./data/redis:/data
+    entrypoint: redis-server --appendonly yes
+    restart: always
