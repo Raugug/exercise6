@@ -8,6 +8,13 @@ module.exports = function(req, res) {
   const body = JSON.stringify(req);
   var query = getCredit();
 
+  if (req.status && req.status === "PENDING"){
+    saveMessage(
+      {
+        ...req
+      })
+  } else {
+
   query.exec(function(err, credit) {
     if (err) return console.log(err);
 
@@ -88,4 +95,5 @@ module.exports = function(req, res) {
       res.end("No credit error");
     }
   });
+  }
 };
