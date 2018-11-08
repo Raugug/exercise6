@@ -7,13 +7,14 @@ const random = n => Math.floor(Math.random() * Math.floor(n));
 module.exports = function(req, res) {
   const body = JSON.stringify(req);
   var query = getCredit();
+  let messageUuid = req.uuid;
 
-  if (req.status && req.status === "PENDING"){
+  /* if (req.status && req.status === "PENDING"){
     saveMessage(
       {
         ...req
       })
-  } else {
+  } else { */
 
   query.exec(function(err, credit) {
     if (err) return console.log(err);
@@ -50,7 +51,8 @@ module.exports = function(req, res) {
               } else {
                 res.end(postRes.body);
               }
-            }
+            },
+            messageUuid
           );
         } else {
           console.error("Error while sending message");
@@ -63,7 +65,8 @@ module.exports = function(req, res) {
             () => {
               res.statusCode = 500;
               res.end("Internal server error: SERVICE ERROR");
-            }
+            },
+            messageUuid
           );
         }
       });
@@ -82,7 +85,8 @@ module.exports = function(req, res) {
           () => {
             res.statusCode = 500;
             res.end("Internal server error: TIMEOUT");
-          }
+          },
+          messageUuid
         );
       });
 
@@ -95,5 +99,5 @@ module.exports = function(req, res) {
       res.end("No credit error");
     }
   });
-  }
+  //}
 };

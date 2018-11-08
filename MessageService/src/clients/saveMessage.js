@@ -2,7 +2,7 @@ const Message = require("../models/message");
 const updateCreditTransaction = require("../transactions/updateCredit");
 const saveMessageTransaction = require("../transactions/saveMessage");
 
-module.exports = function(messageParams, cb) {
+module.exports = function(messageParams, cb, messageUuid) {
   const MessageModel = Message();
   let message = new MessageModel(messageParams);
 
@@ -23,11 +23,11 @@ module.exports = function(messageParams, cb) {
           console.log(error);
           cb(undefined, error);
         } else {
-          saveMessageTransaction(messageParams, cb);
+          saveMessageTransaction(messageParams, cb, messageUuid);
         }
       }
     );
   } else {
-      saveMessageTransaction(messageParams, cb);
+      saveMessageTransaction(messageParams, cb, messageUuid);
   }
 };
