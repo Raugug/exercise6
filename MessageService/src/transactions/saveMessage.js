@@ -8,7 +8,7 @@ function saveMessageReplica(replica, retries) {
     return replica
       .save()
       .then(doc => {
-        console.log("Message replicated successfully", replica);
+        console.log("Message replicated successfully", doc);
         return doc;
       })
       .catch(err => {
@@ -25,18 +25,15 @@ function saveMessageTransaction(newValue, messageUuid) {
 
   let message = new MessagePrimary(newValue);
 
-  /* return message
-    .save() */
-  return MessagePrimary.findOneAndUpdate({"uuid": messageUuid}, newValue)
+  return MessagePrimary.findOneAndUpdate({"uuid": messageUuid}, newValue, {new:true})
     .then(doc => {
-      //console.log("findOneAndUpdate", doc)
       if (doc == null) {
         return message.save().then(doc => {
-            console.log("Message saved1 successfully:", doc);
+            console.log("Message saved successfully:", doc);
             return cleanClone(doc);
           })
         } else {
-          console.log("Message saved successfully:", newValue);
+          console.log("Message updated successfully:", newValue);
           return cleanClone(doc);
         }
     })
